@@ -8,9 +8,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
 
     let quiz = [
-        ["4 + 2 = 6", "True"],
-        ["3 + 5 = 8", "True"],
-        ["5 - 8 = 3", "False"]
+        Question(ques:"4 + 2 = 6", ans:"True"),
+        Question(ques:"3 + 5 = 8", ans:"True"),
+        Question(ques:"5 - 8 = 3", ans:"False")
     ]
     var quesNumber = -1;
     var score = 0;
@@ -21,19 +21,23 @@ class ViewController: UIViewController {
     }
 
     @IBAction func answerButton(_ sender: UIButton) {
-        if (sender.currentTitle == quiz[quesNumber][1]){
+        if (sender.currentTitle == quiz[quesNumber].ans){
             score+=1
-            updateUI();
+            sender.backgroundColor = UIColor.green
         }
         else{
-            updateUI();
+            sender.backgroundColor = UIColor.red
         }
+        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
     
-    func updateUI(){
+    @objc func updateUI(){
+        trueButton.backgroundColor = UIColor.clear
+        falseButton.backgroundColor = UIColor.clear
+        progressBar.progress = Float(quesNumber+1)/Float(quiz.count)
         if(quesNumber+1<quiz.count){
             quesNumber+=1;
-            questionLabel.text = quiz[quesNumber][0];
+            questionLabel.text = quiz[quesNumber].ques;
         }
         else{
             questionLabel.text = "Your score was " + String(score) + "/" +  String(quiz.count);
